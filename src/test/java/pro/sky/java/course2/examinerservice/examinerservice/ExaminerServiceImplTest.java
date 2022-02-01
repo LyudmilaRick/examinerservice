@@ -5,11 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+
 import org.mockito.junit.jupiter.MockitoExtension;
-import pro.sky.java.course2.examinerservice.domain.Question;
 import pro.sky.java.course2.examinerservice.exeption.BadRequestException;
-import pro.sky.java.course2.examinerservice.exeption.QuestionNotExistException;
 import pro.sky.java.course2.examinerservice.service.QuestionService;
 import pro.sky.java.course2.examinerservice.serviceimpl.ExaminerServiceImpl;
 
@@ -31,13 +29,26 @@ public class ExaminerServiceImplTest {
         questionServiceMock.add(QUESTION_2, ANSWER_2);
     }
 
+    /**
+     * тест, когда коллекцию заполняем случайным объектом
+     */
     @Test
     void getQuestionTest() {
-        Mockito.when(questionServiceMock.getCount()).thenReturn(1);
-        Mockito.when(questionServiceMock.getRandomQuestion()).thenReturn(QUESTION_1);
-        assertEquals(QUESTIONS_COLLECTION, out.getQuestion(1));
-
+        when(questionServiceMock.getCount()).thenReturn(2);
+        when(questionServiceMock.getRandomQuestion()).thenReturn(QUESTION_WAS_ADDED_1);
+        assertEquals(out.getQuestion(1), QUESTIONS_COLLECTION);
     }
+
+    /**
+     * тест, когда выводим всю коллекцию, так как введен запрос равный размеру
+     */
+    @Test
+    void getAllQuestionTest() {
+        when(questionServiceMock.getCount()).thenReturn(1);
+        when(questionServiceMock.getAll()).thenReturn(QUESTIONS_COLLECTION);
+        assertEquals(out.getQuestion(1), QUESTIONS_COLLECTION);
+    }
+
 
     @Test
     void getBedRequestTest() {

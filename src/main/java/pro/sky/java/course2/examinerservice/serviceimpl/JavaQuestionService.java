@@ -32,10 +32,9 @@ public class JavaQuestionService implements QuestionService {
 
 
     private int getRandom(int count) {
-        java.util.Random random = new java.util.Random();
-        return random.nextInt(count);
+        int min = 1;
+        return (int) (Math.random() * (count - min) + min);
     }
-
 
     /**
      * добавление нового вопрос
@@ -78,19 +77,21 @@ public class JavaQuestionService implements QuestionService {
         return examQuestion.values();
     }
 
+    /**
+     * исключение отработает если вообще нет вопросов - нечего отдавать
+     * или если будет ошибка возвращения рандомного числа
+     */
     @Override
-    public String getRandomQuestion() {
-        if (count == 0) {
-            throw new QuestionNotExistException();
+    public Question getRandomQuestion() {
+        int index = 1; // итерации прохода по MAP
+        int intRandom = getRandom(count); // случайное число
+        for (Question item : examQuestion.values()) {
+            if (index == intRandom) {
+                return item;
+            }
+            index += 1;
         }
-        int index = getRandom(count);
-        return examQuestion.keySet().stream()
-                .skip(index)
-                .findFirst()
-                .get();
-
-        //    List<String> keys = new ArrayList<>( examQuestion.keySet());
-        //    return keys.get(index);
+        throw new QuestionNotExistException();
     }
 
     private boolean collectHash(String question) {

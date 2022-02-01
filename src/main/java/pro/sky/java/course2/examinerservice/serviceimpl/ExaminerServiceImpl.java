@@ -1,6 +1,7 @@
 package pro.sky.java.course2.examinerservice.serviceimpl;
 
 import org.springframework.stereotype.Service;
+import pro.sky.java.course2.examinerservice.domain.Question;
 import pro.sky.java.course2.examinerservice.exeption.BadRequestException;
 import pro.sky.java.course2.examinerservice.service.ExaminerService;
 import pro.sky.java.course2.examinerservice.service.QuestionService;
@@ -22,11 +23,19 @@ public class ExaminerServiceImpl implements ExaminerService {
         this.questionService = questionService;
     }
 
+    /**
+     * если запросили 0 или больше чем в наличие - вернем исключение
+     * вернем всю коллекцию, если запрошено количество, равное размеру коллекции
+     * вернем только неповторяющиеся значения, поэтому накапливаем в Set нужное количество
+     */
     @Override
-    public Collection<String> getQuestion(int amount) {
-        Set<String> examCollection = new HashSet<>();
+    public Collection<Question> getQuestion(int amount) {
+        Set<Question> examCollection = new HashSet<>();
         if (checkAmount(amount)) {
             throw new BadRequestException();
+        }
+        if (questionService.getCount() == amount) {
+            return questionService.getAll();
         }
         while (examCollection.size() < amount) {
             examCollection.add(questionService.getRandomQuestion());

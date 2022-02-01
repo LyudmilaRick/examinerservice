@@ -18,7 +18,7 @@ public interface QuestionService {
 
     Collection<Question> getAll();
 
-    String getRandomQuestion();
+    Question getRandomQuestion();
 
     int getCount();
 }
