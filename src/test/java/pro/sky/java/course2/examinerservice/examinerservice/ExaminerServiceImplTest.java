@@ -8,6 +8,7 @@ import org.mockito.Mock;
 
 import org.mockito.junit.jupiter.MockitoExtension;
 import pro.sky.java.course2.examinerservice.exeption.BadRequestException;
+import pro.sky.java.course2.examinerservice.service.ExaminerService;
 import pro.sky.java.course2.examinerservice.service.QuestionService;
 import pro.sky.java.course2.examinerservice.serviceimpl.ExaminerServiceImpl;
 
@@ -23,19 +24,14 @@ public class ExaminerServiceImplTest {
     @InjectMocks
     private ExaminerServiceImpl out;
 
-    @BeforeEach
-    public void setUp() {
-        questionServiceMock.add(QUESTION_1, ANSWER_1);
-        questionServiceMock.add(QUESTION_2, ANSWER_2);
-    }
-
     /**
      * тест, когда коллекцию заполняем случайным объектом
      */
     @Test
     void getQuestionTest() {
-        when(questionServiceMock.getCount()).thenReturn(2);
+        when(questionServiceMock.getCount()).thenReturn(1);
         when(questionServiceMock.getRandomQuestion()).thenReturn(QUESTION_WAS_ADDED_1);
+        when(questionServiceMock.add(QUESTION_1,ANSWER_1)).thenReturn(QUESTION_WAS_ADDED_1);
         assertEquals(out.getQuestion(1), QUESTIONS_COLLECTION);
     }
 
@@ -43,7 +39,7 @@ public class ExaminerServiceImplTest {
      * тест, когда выводим всю коллекцию, так как введен запрос равный размеру
      */
     @Test
-    void getAllQuestionTest() {
+    void shouldGetAllQuestionWasCorrect() {
         when(questionServiceMock.getCount()).thenReturn(1);
         when(questionServiceMock.getAll()).thenReturn(QUESTIONS_COLLECTION);
         assertEquals(out.getQuestion(1), QUESTIONS_COLLECTION);
@@ -51,7 +47,7 @@ public class ExaminerServiceImplTest {
 
 
     @Test
-    void getBedRequestTest() {
+    void shouldGetBedRequestWasChecked() {
         assertThrows(BadRequestException.class, () -> out.getQuestion(5));
     }
 }

@@ -9,10 +9,11 @@ import pro.sky.java.course2.examinerservice.service.QuestionService;
 import java.util.*;
 import java.util.Collection;
 
+
 @Service
 public class JavaQuestionService implements QuestionService {
-    public final Map<String, Question> examQuestion;
-    protected int count = 0;
+    final Map<String, Question> examQuestion;
+    int count = 0;
     /**
      * массив хэш значенийдля вопросов
      * простейшая проверка на дубликаты вопросов
@@ -32,8 +33,9 @@ public class JavaQuestionService implements QuestionService {
 
 
     private int getRandom(int count) {
+        java.util.Random random = new java.util.Random();
         int min = 1;
-        return (int) (Math.random() * (count - min) + min);
+        return random.nextInt(count) + min;
     }
 
     /**
@@ -45,13 +47,8 @@ public class JavaQuestionService implements QuestionService {
      */
     @Override
     public Question add(String question, String answer) {
-        if (collectHash(question)) {
-            Question item = new Question(question, answer);
-            examQuestion.put(item.getQuestion(), item);
-            count++;
-            return item;
-        }
-        throw new QuestionExistException();
+        Question item = new Question(question, answer);
+        return add(item);
     }
 
     @Override
@@ -67,6 +64,7 @@ public class JavaQuestionService implements QuestionService {
     @Override
     public Question remove(Question question) {
         if (examQuestion.containsKey(question.getQuestion())) {
+            count--;
             return examQuestion.remove(question.getQuestion());
         }
         throw new QuestionNotExistException();
@@ -74,7 +72,9 @@ public class JavaQuestionService implements QuestionService {
 
     @Override
     public Collection<Question> getAll() {
-        return examQuestion.values();
+        // @DisterRU Лучше привыкать сразу возвращать копию или иммутабл обертку на всех коллекциях,
+        // что не должны изменяться вовне.
+        return Map.copyOf(examQuestion).values();
     }
 
     /**

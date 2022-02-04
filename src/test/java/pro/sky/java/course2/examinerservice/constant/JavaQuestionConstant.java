@@ -23,7 +23,7 @@ public class JavaQuestionConstant {
             "Полиморфизм", " это свойство, позволяющее " +
             "с помощью одного интерфейса обращаться к общему классу действий");
 
-    public static final Collection<Question> QUESTIONS_FACTORY = List.of(
+    public static final Collection<Question> QUESTIONS_COLLECTION_LIST = List.of(
             new Question("Полиморфизм", " это свойство, позволяющее " +
                     "с помощью одного интерфейса обращаться к общему классу действий"),
             new Question("Инкапсуляция", " разграничение доступа к данным и возможностям классов и объектов")

@@ -17,7 +17,8 @@ import java.util.Set;
  */
 @Service
 public class ExaminerServiceImpl implements ExaminerService {
-    public QuestionService questionService;
+    private final QuestionService questionService;
+    int count;
 
     public ExaminerServiceImpl(QuestionService questionService) {
         this.questionService = questionService;
@@ -28,13 +29,18 @@ public class ExaminerServiceImpl implements ExaminerService {
      * вернем всю коллекцию, если запрошено количество, равное размеру коллекции
      * вернем только неповторяющиеся значения, поэтому накапливаем в Set нужное количество
      */
+    private int getCount() {
+        return questionService.getCount();
+    }
+
     @Override
     public Collection<Question> getQuestion(int amount) {
+        count = getCount();
         Set<Question> examCollection = new HashSet<>();
         if (checkAmount(amount)) {
             throw new BadRequestException();
         }
-        if (questionService.getCount() == amount) {
+        if (count == amount) {
             return questionService.getAll();
         }
         while (examCollection.size() < amount) {
@@ -44,7 +50,7 @@ public class ExaminerServiceImpl implements ExaminerService {
     }
 
     protected boolean checkAmount(int amount) {
-        return amount == 0 || amount > questionService.getCount();
+        return amount == 0 || amount > count;
     }
 }
 
