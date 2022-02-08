@@ -22,7 +22,7 @@ public class ExamController {
         this.examinerService = examinerService;
     }
 
-    @GetMapping(value = "/get")
+    @GetMapping( "/get")
     Collection<Question> getQuestion(@RequestParam(name = "amount") int value) {
         return examinerService.getQuestion(value);
     }
